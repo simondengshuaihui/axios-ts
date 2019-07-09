@@ -1,7 +1,23 @@
-import { AxiosRequestConfig, AxiosPromise, Method } from '../types'
+import { AxiosRequestConfig, AxiosPromise, Method,AxiosResponse,RejectedFn, ResolvedFn } from '../types'
 import dispatchRequest from './dispatchRequest'
-
+import InterceptorManager from './InterceptorManager'
+interface Interceptors {
+  request: InterceptorManager<AxiosRequestConfig>
+  response: InterceptorManager<AxiosResponse>
+}
+interface PromiseChain<T> {
+  resolved: ResolvedFn<T> | ((config: AxiosRequestConfig) => AxiosPromise)
+  rejected?: RejectedFn
+}
 export default class Axios {
+  interceptors: Interceptors
+
+  constructor() {
+    this.interceptors = {
+      request: new InterceptorManager<AxiosRequestConfig>(),
+      response: new InterceptorManager<AxiosResponse>()
+    }
+  }
   request(url: any, config?: any): AxiosPromise {
     if (typeof url === 'string') {
       if (!config) {
@@ -11,7 +27,32 @@ export default class Axios {
     } else {
       config = url
     }
-    return dispatchRequest(config)
+
+    // 存储所有待执行的任务
+    const chain: PromiseChain<any>[] = [{
+      resolved: dispatchRequest,
+      rejected: undefined
+    }]
+
+    // 把所有request里面的拦截器插入chain中
+    this.interceptors.request.forEach(interceptor => {
+      chain.unshift(interceptor)
+    })
+    // 把所有responce里面的拦截器插入chain中
+    this.interceptors.response.forEach(interceptor => {
+      chain.push(interceptor)
+    })
+
+    let promise = Promise.resolve(config)
+
+    // 遍历执行chain中的所有promise任务
+    while (chain.length) {
+      const { resolved, rejected } = chain.shift()!
+      promise = promise.then(resolved, rejected)
+    }
+
+    // 返回最终的执行结果
+    return promise
   }
 
   get(url: string, config?: AxiosRequestConfig): AxiosPromise {
