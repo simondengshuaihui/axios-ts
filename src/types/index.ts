@@ -14,14 +14,16 @@ export type Method =
   | 'patch'
   | 'PATCH'
 
+  // 有默认配置，选项都可以是可选参数
 export interface AxiosRequestConfig {
   url?: string
-  method: Method
+  method?: Method
   data?: any
   params?: any
   headers?: any
   responseType?: XMLHttpRequestResponseType
   timeout?: number
+  [propName: string]: any  // 索引访问签名
 }
 
 // 函数类型接口
@@ -49,7 +51,7 @@ export interface AxiosError extends Error {
 }
 
 export interface Axios {
-
+  defaults: AxiosRequestConfig
   interceptors:{
     request: AxiosInterceptorManager<AxiosRequestConfig>,
     response: AxiosInterceptorManager<AxiosResponse>

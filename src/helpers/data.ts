@@ -9,7 +9,7 @@ export function transformRequest(data: any): any {
   return data
 }
 
-// 放回字符串转对象
+// 返回字符串转对象
 export function transformResponse(data: any): any {
   if (typeof data === 'string') {
     try {

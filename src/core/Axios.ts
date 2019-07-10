@@ -1,6 +1,7 @@
 import { AxiosRequestConfig, AxiosPromise, Method,AxiosResponse,RejectedFn, ResolvedFn } from '../types'
 import dispatchRequest from './dispatchRequest'
 import InterceptorManager from './InterceptorManager'
+import mergeConfig from './mergeConfig'
 interface Interceptors {
   request: InterceptorManager<AxiosRequestConfig>
   response: InterceptorManager<AxiosResponse>
@@ -11,8 +12,11 @@ interface PromiseChain<T> {
 }
 export default class Axios {
   interceptors: Interceptors
+  defaults: AxiosRequestConfig
 
-  constructor() {
+  // 传入默认配置项
+  constructor(initConfig: AxiosRequestConfig) {
+    this.defaults = initConfig
     this.interceptors = {
       request: new InterceptorManager<AxiosRequestConfig>(),
       response: new InterceptorManager<AxiosResponse>()
@@ -28,6 +32,8 @@ export default class Axios {
       config = url
     }
 
+    // 合并默认配置项
+    config = mergeConfig(this.defaults, config)
     // 存储所有待执行的任务
     const chain: PromiseChain<any>[] = [{
       resolved: dispatchRequest,

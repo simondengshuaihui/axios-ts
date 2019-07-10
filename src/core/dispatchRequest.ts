@@ -5,7 +5,7 @@ import { AxiosRequestConfig, AxiosPromise, AxiosResponse } from '../types'
 import xhr from './xhr'
 import { buildURL } from '../helpers/url'
 import { transformRequest, transformResponse } from '../helpers/data'
-import { processHeaders } from '../helpers/headers'
+import { processHeaders,flattenHeaders } from '../helpers/headers'
 
 export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromise {
   processConfig(config)
@@ -15,9 +15,11 @@ export default function dispatchRequest(config: AxiosRequestConfig): AxiosPromis
 }
 
 function processConfig(config: AxiosRequestConfig): void {
-  config.url = transformURL(config)
-  config.headers = transformHeaders(config)
-  config.data = transformRequestData(config)
+  config.url = transformURL(config)  // 处理URL添加params
+  config.headers = transformHeaders(config)  // 为post的对象添加application/json;charset=utf-8请求头
+  config.data = transformRequestData(config) // 把data转化为json字符串
+  config.headers = flattenHeaders(config.headers,config.method!) // 把对象二级headers改为一级
+
 }
 
 function transformURL(config: AxiosRequestConfig): string {
