@@ -4,7 +4,7 @@ import { createError } from '../helpers/error'
 
 export default function xhr(config: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
-    const { method = 'get', url, data = null, headers, responseType, timeout,cancelToken } = config
+    const { method = 'get', url, data = null, headers, responseType, timeout,cancelToken, withCredentials } = config
 
     const request = new XMLHttpRequest()
 
@@ -14,6 +14,11 @@ export default function xhr(config: AxiosRequestConfig) {
         request.abort()
         reject(reason)
       })
+    }
+
+    // 如果有withCredentials则跨域请求带上cookie
+    if (withCredentials) {
+      request.withCredentials = true
     }
 
     if (responseType) {
