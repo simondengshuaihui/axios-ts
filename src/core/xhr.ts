@@ -4,9 +4,17 @@ import { createError } from '../helpers/error'
 
 export default function xhr(config: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
-    const { method = 'get', url, data = null, headers, responseType, timeout } = config
+    const { method = 'get', url, data = null, headers, responseType, timeout,cancelToken } = config
 
     const request = new XMLHttpRequest()
+
+    // 如果有cancelToekn就触发cancelToken.promise,里面是一个padding状态的promise，如果修改为resolve状态就取消请求
+    if (cancelToken) {
+      cancelToken.promise.then(reason => {
+        request.abort()
+        reject(reason)
+      })
+    }
 
     if (responseType) {
       request.responseType = responseType

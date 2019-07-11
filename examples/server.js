@@ -38,6 +38,8 @@ registerInterceptorRouter()
 
 registerConfigRouter()
 
+registerCancelRouter()
+
 app.use(router)
 
 const port = process.env.PORT || 8080
@@ -152,3 +154,19 @@ function registerConfigRouter() {
   })
 }
 
+function registerCancelRouter() {
+  router.get('/cancel/get', function(req, res) {
+    setTimeout(() => {
+      res.json({
+        msg: `hello world`
+      })
+    }, 1000)
+  })
+  router.get('/cancel/post', function(req, res) {
+    setTimeout(() => {
+      res.json({
+        msg: `hello world`
+      })
+    }, 1000)
+  })
+}
