@@ -40,6 +40,13 @@ registerConfigRouter()
 
 registerCancelRouter()
 
+// 添加token房子CORS攻击
+app.use(express.static(__dirname, {
+  setHeaders (res) {
+    res.cookie('XSRF-TOKEN-D', '1234abc')
+  }
+}))
+
 app.use(router)
 
 const port = process.env.PORT || 8080

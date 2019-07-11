@@ -1,10 +1,23 @@
 import { AxiosRequestConfig, AxiosResponse } from '../types'
 import { parseHeaders } from '../helpers/headers'
 import { createError } from '../helpers/error'
+import {isURLSameOrigin} from '../helpers/url'
+import cookie from '../helpers/cookie'
 
 export default function xhr(config: AxiosRequestConfig) {
   return new Promise((resolve, reject) => {
-    const { method = 'get', url, data = null, headers, responseType, timeout,cancelToken, withCredentials } = config
+    const {
+      method = 'get',
+      url,
+      data = null,
+      headers,
+      responseType,
+      timeout,
+      cancelToken,
+      withCredentials,
+      xsrfCookieName,
+      xsrfHeaderName
+    } = config
 
     const request = new XMLHttpRequest()
 
@@ -19,6 +32,14 @@ export default function xhr(config: AxiosRequestConfig) {
     // 如果有withCredentials则跨域请求带上cookie
     if (withCredentials) {
       request.withCredentials = true
+    }
+
+    // 如果是同源或者withCredentials的时候带上xsrfHeaderName请求头(代指token)
+    if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName){
+      const xsrfValue = cookie.read(xsrfCookieName)
+      if (xsrfValue) {
+        headers[xsrfHeaderName!] = xsrfValue
+      }
     }
 
     if (responseType) {
