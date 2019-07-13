@@ -31,9 +31,14 @@ export interface AxiosRequestConfig {
   xsrfHeaderName?: string
   onDownloadProgress?: (e: ProgressEvent) => void
   onUploadProgress?: (e: ProgressEvent) => void
+  auth?: AxiosBasicCredentials
   [propName: string]: any  // 索引访问签名
 }
 
+export interface AxiosBasicCredentials {
+  username: string
+  password: string
+}
 export interface CancelToken {
   promise: Promise<Cancel>
   reason?: Cancel

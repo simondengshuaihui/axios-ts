@@ -19,7 +19,8 @@ export default function xhr(config: AxiosRequestConfig) {
       xsrfCookieName,
       xsrfHeaderName,
       onDownloadProgress,
-      onUploadProgress
+      onUploadProgress,
+      auth
     } = config
 
     const request = new XMLHttpRequest()
@@ -107,6 +108,10 @@ export default function xhr(config: AxiosRequestConfig) {
       // 如果是formdata类型就删除设定的headers，浏览器自动添加multipart/form-data请求头
       if (isFormData(data)) {
         delete headers['Content-Type']
+      }
+      // 如果有auth就添加授权headers
+      if (auth) {
+        headers['Authorization'] = 'Basic ' + btoa(auth.username + ':' + auth.password)
       }
       // 如果是同源或者withCredentials 的时候且xsrfCookieName有值带上xsrfHeaderName请求头(代指token)
       if ((withCredentials || isURLSameOrigin(url!)) && xsrfCookieName) {
