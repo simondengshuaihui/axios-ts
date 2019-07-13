@@ -1,4 +1,5 @@
 import axios from '../../src/index'
+import qs from 'qs'
 
 document.cookie = 'a=b'
 
@@ -62,4 +63,39 @@ axios.get('/more/304', {
   console.log(res)
 }).catch(err => {
   console.log(err.message)
+})
+
+// 自定义 params 的解析规则 demo
+axios.get('/more/get', {
+  params: new URLSearchParams('a=b&c=d')
+}).then(res => {
+  console.log(res)
+})
+
+axios.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  }
+}).then(res => {
+  console.log(res)
+})
+
+const instance2 = axios.create({
+  paramsSerializer(params) {
+    return qs.stringify(params, {
+      arrayFormat: 'brackets'
+    })
+  }
+})
+
+instance2.get('/more/get', {
+  params: {
+    a: 1,
+    b: 2,
+    c: ['a', 'b', 'c']
+  }
+}).then(res => {
+  console.log(res,88)
 })
