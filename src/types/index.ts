@@ -114,6 +114,8 @@ export interface Axios {
   put<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
 
   patch<T = any>(url: string, data?: any, config?: AxiosRequestConfig): AxiosPromise<T>
+
+  getUri(config?: AxiosRequestConfig): string
 }
 
 // 混合对象类，实现重载，方法既可以传入一个参数也可以传入2个参数
@@ -132,10 +134,15 @@ export interface CancelStatic {
 // 扩展一个实例静态接口
 export interface AxiosStatic extends AxiosInstance{
   create(config?: AxiosRequestConfig): AxiosInstance
-
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic
   isCancel: (value: any) => boolean
+  all<T>(promises: Array<T | Promise<T>>): Promise<T[]>
+  spread<T, R>(callback: (...args: T[]) => R): (arr: T[]) => R
+  Axios: AxiosClassStatic
+}
+export interface AxiosClassStatic {
+  new (config: AxiosRequestConfig): Axios
 }
 
 export interface AxiosInterceptorManager<T> {

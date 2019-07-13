@@ -25,7 +25,7 @@ function processConfig(config: AxiosRequestConfig): void {
 
 }
 
-function transformURL(config: AxiosRequestConfig): string {
+export function transformURL(config: AxiosRequestConfig): string {
   let { url, params,paramsSerializer,baseURL } = config
   // 当有baseURL且url不是绝对地址的时候合并
   if (baseURL && !isAbsoluteURL(url!)) {
