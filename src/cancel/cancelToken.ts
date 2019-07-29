@@ -28,7 +28,7 @@ export default class CancelToken {
   // 静态方法
   static source(): CancelTokenSource {
     let cancel!: Canceler
-    // c就是一个函数体excutor里面的参数
+    // c就是一个函数体excutor里面的参数 c = message=>{...}
     const token = new CancelToken(c => {
       cancel = c
     })

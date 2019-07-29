@@ -12,7 +12,7 @@ export function isPlainObject(val: any): val is Object {
 // 实现混合对象
 export function extend<T, U>(to: T, from: U): T & U {
   for (const key in from) {
-    ;(to as T & U)[key] = from[key] as any
+    (to as T & U)[key] = from[key] as any
   }
   return to as T & U
 }
@@ -48,7 +48,7 @@ export function isFormData(val: any): boolean {
   return typeof val !== 'undefined' && val instanceof FormData
 }
 
-// 判断是否是
+// 判断是否是URLSearchParams实例
 export function isURLSearchParams(val: any): val is URLSearchParams {
   return typeof val !== 'undefined' && val instanceof URLSearchParams
 }

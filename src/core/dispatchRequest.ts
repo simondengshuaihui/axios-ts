@@ -22,7 +22,6 @@ function processConfig(config: AxiosRequestConfig): void {
   // config.headers = transformHeaders(config)  // 为post的对象添加application/json;charset=utf-8请求头
   config.data = transform(config.data, config.headers, config.transformRequest) // 请求前对请求data做处理
   config.headers = flattenHeaders(config.headers,config.method!) // 把对象二级headers改为一级
-
 }
 
 export function transformURL(config: AxiosRequestConfig): string {
@@ -38,6 +37,7 @@ function transformRequestData(config: AxiosRequestConfig): any {
   return transformRequest(config.data)
 }
 function transformResponseData(res: AxiosResponse): AxiosResponse {
+  // 通过配置transformResponse函数，来处理data
   res.data = transform(res.data, res.headers, res.config.transformResponse)
   return res
 }
