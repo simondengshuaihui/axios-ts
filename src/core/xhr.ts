@@ -60,6 +60,10 @@ export default function xhr(config: AxiosRequestConfig) {
         cancelToken.promise.then(reason => {
           request.abort()
           reject(reason)
+        }).catch(
+          /* istanbul ignore next */
+          () => {
+          // do nothing
         })
       }
     }
