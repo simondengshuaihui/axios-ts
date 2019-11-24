@@ -1,3 +1,4 @@
+// 方法声明
 export type Method =
   | 'get'
   | 'GET'
@@ -14,7 +15,7 @@ export type Method =
   | 'patch'
   | 'PATCH'
 
-  // 有默认配置，选项都可以是可选参数
+// 有默认配置，选项都可以是可选参数
 export interface AxiosRequestConfig {
   url?: string
   method?: Method
@@ -35,7 +36,7 @@ export interface AxiosRequestConfig {
   validateStatus?: (status: number) => boolean
   paramsSerializer?: (params: any) => string
   baseURL?: string
-  [propName: string]: any  // 索引访问签名
+  [propName: string]: any // 索引访问签名
 }
 
 export interface AxiosBasicCredentials {
@@ -68,7 +69,7 @@ export interface CancelTokenSource {
 
 // 为 CancelToken 类的类类型。
 export interface CancelTokenStatic {
-  new(executor: CancelExecutor): CancelToken
+  new (executor: CancelExecutor): CancelToken
 
   source(): CancelTokenSource
 }
@@ -94,8 +95,8 @@ export interface AxiosError extends Error {
 
 export interface Axios {
   defaults: AxiosRequestConfig
-  interceptors:{
-    request: AxiosInterceptorManager<AxiosRequestConfig>,
+  interceptors: {
+    request: AxiosInterceptorManager<AxiosRequestConfig>
     response: AxiosInterceptorManager<AxiosResponse>
   }
 
@@ -129,10 +130,10 @@ export interface Cancel {
 }
 
 export interface CancelStatic {
-  new(message?: string): Cancel
+  new (message?: string): Cancel
 }
 // 扩展一个实例静态接口
-export interface AxiosStatic extends AxiosInstance{
+export interface AxiosStatic extends AxiosInstance {
   create(config?: AxiosRequestConfig): AxiosInstance
   CancelToken: CancelTokenStatic
   Cancel: CancelStatic
@@ -151,7 +152,7 @@ export interface AxiosInterceptorManager<T> {
   eject(id: number): void
 }
 
-export interface ResolvedFn<T=any> {
+export interface ResolvedFn<T = any> {
   (val: T): T | Promise<T>
 }
 
