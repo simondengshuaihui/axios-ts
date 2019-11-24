@@ -5,5 +5,5 @@ const cookie = {
   }
 }
 
-// 读取cookie
+// 读取cookie,备注发布测试
 export default cookie
